@@ -6,6 +6,7 @@ let Restaurant = React.createClass({
   getInitialState: function() {
     return ({restaurant: null})
   },
+  
   render: function() {
     let stars = ""
     let reviews = []
