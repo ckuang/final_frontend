@@ -4,7 +4,7 @@ var $ = require('jquery')
 var NewRestaurant = React.createClass({
   getInitialState: function (){
     return({
-      Name:'', Neighborhood:'', Address:'', Cuisine:'', Cost: ''
+      Name:'', Neighborhood:'', Address:'', Cuisine:'', Cost: 1
     })
   },
   handleChange: function(eventType, event){

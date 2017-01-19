@@ -39,17 +39,15 @@ let Restaurant = React.createClass({
         <strong>Cuisine: </strong>{info.cuisine}<br/>
         <strong>Cost: </strong>{this.costFunc()}<br/>
         <h3>Reviews</h3>
-        <ol>
         {reviews.map(
           (review, indx)=>(
-            <li key={indx}>
-            <strong>Date: </strong>{this.dateFunc(review.date)}<br/>
+            <div key={indx}>
+            <strong>{indx+1}. Date: </strong>{this.dateFunc(review.date)}<br/>
             <strong>Rating: </strong>{review.rating}<br/>
             <strong>Description: </strong>{review.description}<br/>
-            </li>
+            </div>
           )
         )}
-        </ol>
         <Review id={this.props.params.id}/>
         </div>
       )
