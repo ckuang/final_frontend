@@ -9,12 +9,17 @@ let App = React.createClass({
   render: function() {
     return(
       <div>
+      	<Restaurants/>
         {this.props.children}
       </div>
     )
   }
 })
 
-ReactDOM.render(
-
+ReactDOM.render(	
+	<Router history={browserHistory}>
+    <Route path='/' component={App} />
+    <Route path='/restaurants/:id' component={Restaurant} />
+  </Router>
+	,document.getElementById('root')
 )
