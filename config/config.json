@@ -1,21 +1,21 @@
 {
   "development": {
-    "username": "Samantha",
-    "password": "2d?e>oy:6,I1",
+    "username": "Kuang",
+    "password": null,
     "database": "yalp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "Samantha",
-    "password": "2d?e>oy:6,I1",
+    "username": "Kuang",
+    "password": null,
     "database": "yalp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "username": "Samantha",
-    "password": "2d?e>oy:6,I1",
+    "username": "Kuang",
+    "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "postgres"

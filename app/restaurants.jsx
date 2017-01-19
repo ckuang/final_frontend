@@ -75,10 +75,7 @@ let Restaurants = React.createClass({
         </div>
       </div>
     )
-
   }
 })
 
 module.exports = Restaurants
-
-

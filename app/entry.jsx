@@ -5,7 +5,8 @@ var Restaurants = require("./restaurants.jsx")
 var Restaurant = require('./restaurant.jsx')
 
 
-const App = React.createClass({
+
+let App = React.createClass({
   render: function() {
     return(
       <div>
