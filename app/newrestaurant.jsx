@@ -5,6 +5,18 @@ var NewRestaurant = React.createClass({
   getInitialState: function (){
 
   },
+  componentDidMount: function() {
+    $.ajax({
+      url: "",
+      dataType: 'json',
+      success: function(data) {
+        this.setState({data: data});
+      }.bind(this),
+      error: function(status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
   render: function() {
     return (
       <div>
