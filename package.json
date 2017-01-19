@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 10000"
+    "test": "mocha --timeout 10000",
+    "start": "webpack --watch & nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "moment": "^2.17.1"
   }
 }
