@@ -16,5 +16,12 @@ let App = React.createClass({
 })
 
 ReactDOM.render(
+	<Router history={browserHistory}>
+		<Route path='/' component={App}>
+			<IndexRoute component={Restaurants}></IndexRoute>
+			<Route path='/restaurant/:id' component={Restaurant}></Route>
+		</Route>	
+	</Router>
+, document.getElementById('root'))
 
-)
+ 
