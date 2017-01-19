@@ -1,20 +1,26 @@
-var ReactDOM = require("react-dom")
-var React = require('react')
-import {browserHistory, IndexRoute, Router, Route} from 'react-router'
-var Restaurants = require("./restaurants.jsx")
-var Restaurant = require('./restaurant.jsx')
+import React from 'react';
+import ReactDOM from "react-dom";
+import {browserHistory, IndexRoute, Router, Route} from 'react-router';
+
+//Components
+import Restaurants from "./restaurants.jsx";
+import Restaurant from './restaurant.jsx';
 
 
-let App = React.createClass({
-  render: function() {
+const App = (props) => {
     return(
       <div>
-        {this.props.children}
+        {props.children}
       </div>
     )
-  }
-})
+}
 
 ReactDOM.render(
-
-)
+	<Router history={browserHistory}>
+		<Route path='/' component={App}>
+		<IndexRoute component={Restaurants}/>
+			<Route path='/restaurant/:restId' component={Restaurant} />
+		</Route>
+	</Router>,
+	document.getElementById('root')
+);

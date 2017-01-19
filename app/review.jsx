@@ -1,19 +1,35 @@
-var React = require('react')
-var $ = require('jquery')
+import React from 'react';
+import axios from 'axios';
 
-var Review = React.createClass({
+const Review = React.createClass({
   getInitialState: function (){
-    return {
-
-    }
+    return {date: null, description: "", rating:0, RestaurantId: this.props.id}
   },
+
+  handleChange(event){
+    let name = event.target.name;
+    let value = event.target.value;
+    this.setState({[name]: value})
+  },
+
+  newReview(event){
+    axios.post('/api/review', this.state)
+      .then( (res) => {
+        this.setState({date: null, description: "", rating:0});
+      })
+      .catch( (err) => {
+        console.log(err);
+        alert("Something went wrong while traying to create a new review. Please try again in a few minutes!")
+      })
+  },
+
   render: function() {
     return (
       <div>
-        <form>
-          <input type="date"/> <br/>
-          <textarea type="text" placeholder="Describe your experience"/> <br/>
-          <select>
+        <form onSubmit={this.newReview}>
+          <input onChange={this.handleChange} name="date" type="date"/> <br/>
+          <textarea onChange={this.handleChange} name="description" type="text" placeholder="Describe your experience"/> <br/>
+          <select onChange={this.handleChange} name="rating">
             <option value="1">*</option>
             <option value="2">**</option>
             <option value="3">***</option>
@@ -27,4 +43,4 @@ var Review = React.createClass({
   }
 });
 
-module.exports = Review
+export default Review;
