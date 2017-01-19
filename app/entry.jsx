@@ -5,6 +5,7 @@ var Restaurants = require("./restaurants.jsx")
 var Restaurant = require('./restaurant.jsx')
 
 
+
 let App = React.createClass({
   render: function() {
     return(
@@ -16,5 +17,11 @@ let App = React.createClass({
 })
 
 ReactDOM.render(
-
+  <Router history={browserHistory} >
+    <Route path='/' component={App}>
+      <IndexRoute component={Restaurants}/>
+      <Route path='/restaurants/:id' component={Restaurant}/>
+    </Route>
+  </Router>,
+  document.getElementById('root')
 )
