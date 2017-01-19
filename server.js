@@ -8,7 +8,7 @@ var seedFunction = require('./seed')
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json())
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, '/public')))
 
 app.use("/api", router)
 
@@ -18,7 +18,7 @@ app.get('/*', function(req, res) {
 
 
 db.sequelize.sync().then(function() {
-  app.listen(3000)
+  app.listen(2000)
 })
 
 module.exports = app
