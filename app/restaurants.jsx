@@ -36,7 +36,7 @@ let Restaurants = React.createClass({
           <NewRestaurantForm />
           <ul>
             {this.state.restaurants.map(function(a,b){
-              return <li key ={b}> {a} </li>
+              return <li key ={b}> <Link to ='/reviews'>{a} </Link></li>
             })}
 
           </ul>
