@@ -1,17 +1,18 @@
-"use strict";
+'use strict';
 
-module.exports = function(sequelize, DataTypes) {
-  var Review = sequelize.define("Review", {
-    rating: DataTypes.INTEGER,
-    date: DataTypes.DATEONLY,
-    description: DataTypes.STRING
-  }, {
-    classMethods: {
-      associate: function(models) {
-        Review.belongsTo(models.Restaurant)
-      }
-    }
-  });
+module.exports = function (sequelize, DataTypes) {
+    let Review = sequelize.define('Review', {
+            rating:      { type: DataTypes.INTEGER },
+            description: { type: DataTypes.STRING },
+            date:        { type: DataTypes.DATEONLY },
+        },
+        {
+            classMethods: {
+                associate: (models) => {
+                    Review.belongsTo(models.Restaurant)
+                }
+            }
+        });
+    return Review;
 
-  return Review;
 };

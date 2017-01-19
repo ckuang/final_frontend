@@ -8,7 +8,7 @@ const seedyFunction = () => {
   Restaurant.create(restaurants[1])
   Restaurant.create(restaurants[2])
   Restaurant.create(restaurants[3])
-
+  
   Review.create(reviews[0])
   Review.create(reviews[1])
   Review.create(reviews[2])

@@ -3,13 +3,12 @@ var app = express()
 var bodyparser = require('body-parser')
 var path = require('path')
 var db = require('./models')
-var router = require('./routes')
-var seedFunction = require('./seed')
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json())
 app.use(express.static('public'))
 
+var router = require("./routes")
 app.use("/api", router)
 
 app.get('/*', function(req, res) {
@@ -18,7 +17,7 @@ app.get('/*', function(req, res) {
 
 
 db.sequelize.sync().then(function() {
-  app.listen(3000)
+  app.listen(3000, () => console.log('Listening on port 3000'))
 })
 
 module.exports = app
