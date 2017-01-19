@@ -7,7 +7,7 @@ var Review = React.createClass({
       rating: null,
       date: null,
       description: null,
-      id: this.props.restaurantId
+      // RestaurantId: ''
 
     }
   },
@@ -30,7 +30,8 @@ var Review = React.createClass({
       let data ={
         rating:this.state.rating,
         date: this.state.date,
-        description: this.state.description
+        description: this.state.description,
+        // RestaurantId: this.props.params.restaurantId
        
       }
       console.log(data)

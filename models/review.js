@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     rating: DataTypes.INTEGER,
     date: DataTypes.DATEONLY,
     description: DataTypes.STRING
+    // restaurant:
   }, {
     classMethods: {
       associate: function(models) {

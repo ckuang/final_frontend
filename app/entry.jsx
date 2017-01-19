@@ -18,8 +18,8 @@ let App = React.createClass({
 
 ReactDOM.render(
   <Router history = {browserHistory}>
-    <Route path='/reviews' component = {Restaurant}/>
-    <Route path='/newrestaurants' component = {Restaurants}/>
+    <Route path = '/reviews' component = {Restaurant}/>
+    <Route path ='/newrestaurants' component = {Restaurants}/>
 
       
   </Router>,

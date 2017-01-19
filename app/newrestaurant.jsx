@@ -57,7 +57,7 @@ var NewRestaurant = React.createClass({
           <input type="text" onChange ={this.handleChange.bind(this,"neighborhood")} placeholder="Neighborhood"/>
           <input type="text" onChange ={this.handleChange.bind(this, "address")} placeholder="Address"/>
           <input type="text" onChange ={this.handleChange.bind(this, "cuisine")} placeholder="Cuisine"/>
-          <select onChange = {this.handleSelect}>
+          <select onClick = {this.handleSelect}>
             <option value="1">$20</option>
             <option value="2">$30</option>
             <option value="3">$40</option>

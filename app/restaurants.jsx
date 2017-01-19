@@ -1,21 +1,25 @@
 var React = require('react')
 var $ = require('jquery')
 var NewRestaurantForm = require('./newrestaurant.jsx')
+var Restaurant = require('./restaurant.jsx')
+var Review = require('./review.jsx')
+
+
 import {Link} from 'react-router'
 
 let Restaurants = React.createClass({
   getInitialState: function() {
-    return({restaurants: null})
+    return({restaurants: null, id:null})
   },
 
-  componentWillMount() {
+  componentDidMount() {
     $.ajax({
       type: 'GET',
       url: '/api/restaurants'
     })
     .done((data) => {
       var final = data.map(function(a,b){
-        return a.name
+        return a
       })
       this.setState({restaurants: final})
       console.log(this.state.restaurants)
@@ -28,6 +32,14 @@ let Restaurants = React.createClass({
     })
   },
 
+  getId(id) {
+    console.log(id)
+    this.setState({id: id})
+    console.log(this.state.id)
+
+
+  },
+
   render: function() {
     let restaurants = []
     if (this.state.restaurants) {
@@ -36,8 +48,9 @@ let Restaurants = React.createClass({
           <NewRestaurantForm />
           <ul>
             {this.state.restaurants.map(function(a,b){
-              return <li key ={b}> <Link to ='/reviews'>{a} </Link></li>
-            })}
+              // console.log(a.id)
+              return <li onClick ={this.getId.bind(this, a.id)} key ={b}> <Link to ={'/reviews'}>{a.name} </Link></li>
+            }.bind(this))}
 
           </ul>
         </div>
