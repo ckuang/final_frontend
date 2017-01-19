@@ -18,6 +18,7 @@ app.get('/*', function(req, res) {
 
 
 db.sequelize.sync().then(function() {
+  console.log('working')
   app.listen(3000)
 })
 

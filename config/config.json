@@ -1,22 +1,22 @@
 {
   "development": {
-    "username": "Kuang",
+    "username": "bryanbethea",
     "password": null,
-    "database": "yalp",
+    "database": "yelp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "Kuang",
+    "username": "bryanbethea",
     "password": null,
-    "database": "yalp",
+    "database": "yelp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "username": "Kuang",
+    "username": "bryanbethea",
     "password": null,
-    "database": "database_production",
+    "database": "yelp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   }
