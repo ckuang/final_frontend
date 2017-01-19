@@ -7,13 +7,14 @@ module.exports = function(sequelize, DataTypes) {
     address: DataTypes.STRING,
     cuisine: DataTypes.STRING,
     cost: DataTypes.INTEGER
-  }, {
-    classMethods: {
-      associate: function(models) {
-        Restaurant.hasMany(models.Review)
-      }
-    }
-  });
-
+  } 
+  ,{
+	    classMethods: {
+	      associate: function(models) {
+	        Restaurant.hasMany(models.Review)
+	      }
+	    }
+	  }
+  );
   return Restaurant;
 };
