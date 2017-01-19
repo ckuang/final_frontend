@@ -1,10 +1,6 @@
-var models  = require('../models');
-var express = require('express');
-var router  = express.Router();
-var restaurantRouter = require('./restaurant.js')
-var reviewRouter = require('./review.js')
+var router = require('express').Router();
 
-router.use("/restaurants", restaurantRouter)
-router.use("/review", reviewRouter)
+router.use('/restaurants', require('./restaurant-router'));
+router.use('/review', require('./review-router'));
 
-module.exports = router;
+module.exports=router;
