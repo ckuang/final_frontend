@@ -21,10 +21,9 @@ var App = React.createClass({
 })
 
 // REACT ROUTER--------------------------------------------------------
-ReactDOM.render(	
+ReactDOM.render (	
 	<Router history={browserHistory}>
     <Route path='/' component={App} />
     <Route path='/restaurants/:id' component={Restaurant} />
   </Router>
-	,document.getElementById('root')
-)
+	,document.getElementById('root'))
