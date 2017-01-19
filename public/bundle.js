@@ -51,7 +51,7 @@
 	var ReactDOM = __webpack_require__(87);
 	var React = __webpack_require__(3);
 	
-	var Restaurants = __webpack_require__(237);
+	var Restaurants = __webpack_require__(233);
 	var Restaurant = __webpack_require__(236);
 	
 	var App = React.createClass({
@@ -73,7 +73,7 @@
 	    _reactRouter.Route,
 	    { path: '/', component: App },
 	    React.createElement(_reactRouter.IndexRoute, { component: Restaurants }),
-	    React.createElement(_reactRouter.Route, { path: 'restaurants/:id', component: Restaurant })
+	    React.createElement(_reactRouter.Route, { path: '/restaurants/:id', component: Restaurant })
 	  )
 	), document.getElementById('root'));
 
@@ -598,8 +598,15 @@
 /* 6 */
 /***/ function(module, exports) {
 
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+	
 	'use strict';
 	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 	
@@ -620,7 +627,7 @@
 			// Detect buggy property enumeration order in older V8 versions.
 	
 			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
 			test1[5] = 'de';
 			if (Object.getOwnPropertyNames(test1)[0] === '5') {
 				return false;
@@ -649,7 +656,7 @@
 			}
 	
 			return true;
-		} catch (e) {
+		} catch (err) {
 			// We don't expect any of the above to throw, but better to be safe.
 			return false;
 		}
@@ -669,8 +676,8 @@
 				}
 			}
 	
-			if (Object.getOwnPropertySymbols) {
-				symbols = Object.getOwnPropertySymbols(from);
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
 				for (var i = 0; i < symbols.length; i++) {
 					if (propIsEnumerable.call(from, symbols[i])) {
 						to[symbols[i]] = from[symbols[i]];
@@ -950,17 +957,6 @@
 	  }
 	};
 	
-	var fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-	  var Klass = this;
-	  if (Klass.instancePool.length) {
-	    var instance = Klass.instancePool.pop();
-	    Klass.call(instance, a1, a2, a3, a4, a5);
-	    return instance;
-	  } else {
-	    return new Klass(a1, a2, a3, a4, a5);
-	  }
-	};
-	
 	var standardReleaser = function (instance) {
 	  var Klass = this;
 	  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Trying to release an instance into a pool of a different type.') : _prodInvariant('25') : void 0;
@@ -1000,8 +996,7 @@
 	  oneArgumentPooler: oneArgumentPooler,
 	  twoArgumentPooler: twoArgumentPooler,
 	  threeArgumentPooler: threeArgumentPooler,
-	  fourArgumentPooler: fourArgumentPooler,
-	  fiveArgumentPooler: fiveArgumentPooler
+	  fourArgumentPooler: fourArgumentPooler
 	};
 	
 	module.exports = PooledClass;
@@ -3341,7 +3336,14 @@
 	    // We warn in this case but don't throw. We expect the element creation to
 	    // succeed and there will likely be errors in render.
 	    if (!validType) {
-	      process.env.NODE_ENV !== 'production' ? warning(false, 'React.createElement: type should not be null, undefined, boolean, or ' + 'number. It should be a string (for DOM elements) or a ReactClass ' + '(for composite components).%s', getDeclarationErrorAddendum()) : void 0;
+	      if (typeof type !== 'function' && typeof type !== 'string') {
+	        var info = '';
+	        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+	          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+	        }
+	        info += getDeclarationErrorAddendum();
+	        process.env.NODE_ENV !== 'production' ? warning(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', type == null ? type : typeof type, info) : void 0;
+	      }
 	    }
 	
 	    var element = ReactElement.createElement.apply(this, arguments);
@@ -4312,7 +4314,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.4.1';
+	module.exports = '15.4.2';
 
 /***/ },
 /* 33 */
@@ -4420,7 +4422,7 @@
 	
 	  var match = void 0,
 	      lastIndex = 0,
-	      matcher = /:([a-zA-Z_$][a-zA-Z0-9_$]*)|\*\*|\*|\(|\)/g;
+	      matcher = /:([a-zA-Z_$][a-zA-Z0-9_$]*)|\*\*|\*|\(|\)|\\\(|\\\)/g;
 	  while (match = matcher.exec(pattern)) {
 	    if (match.index !== lastIndex) {
 	      tokens.push(pattern.slice(lastIndex, match.index));
@@ -4440,6 +4442,10 @@
 	      regexpSource += '(?:';
 	    } else if (match[0] === ')') {
 	      regexpSource += ')?';
+	    } else if (match[0] === '\\(') {
+	      regexpSource += '\\(';
+	    } else if (match[0] === '\\)') {
+	      regexpSource += '\\)';
 	    }
 	
 	    tokens.push(match[0]);
@@ -4594,6 +4600,10 @@
 	      parenCount -= 1;
 	
 	      if (parenCount) parenHistory[parenCount - 1] += parenText;else pathname += parenText;
+	    } else if (token === '\\(') {
+	      pathname += '(';
+	    } else if (token === '\\)') {
+	      pathname += ')';
 	    } else if (token.charAt(0) === ':') {
 	      paramName = token.substring(1);
 	      paramValue = params[paramName];
@@ -4804,7 +4814,7 @@
 	        children = _props.children;
 	
 	
-	    !history.getCurrentLocation ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'You have provided a history object created with history v2.x or ' + 'earlier. This version of React Router is only compatible with v3 ' + 'history objects. Please upgrade to history v3.x.') : (0, _invariant2.default)(false) : void 0;
+	    !history.getCurrentLocation ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'You have provided a history object created with history v4.x or v2.x ' + 'and earlier. This version of React Router is only compatible with v3 ' + 'history objects. Please change to history v3.x.') : (0, _invariant2.default)(false) : void 0;
 	
 	    return (0, _createTransitionManager3.default)(history, (0, _RouteUtils.createRoutes)(routes || children));
 	  },
@@ -5461,7 +5471,7 @@
 	  return runTransitionHooks(hooks.length, function (index, replace, next) {
 	    var wrappedNext = function wrappedNext() {
 	      if (enterHooks.has(hooks[index])) {
-	        next();
+	        next.apply(undefined, arguments);
 	        enterHooks.remove(hooks[index]);
 	      }
 	    };
@@ -5485,7 +5495,7 @@
 	  return runTransitionHooks(hooks.length, function (index, replace, next) {
 	    var wrappedNext = function wrappedNext() {
 	      if (changeHooks.has(hooks[index])) {
-	        next();
+	        next.apply(undefined, arguments);
 	        changeHooks.remove(hooks[index]);
 	      }
 	    };
@@ -5887,9 +5897,14 @@
 	    if ((0, _PromiseUtils.isPromise)(indexRoutesReturn)) indexRoutesReturn.then(function (indexRoute) {
 	      return callback(null, (0, _RouteUtils.createRoutes)(indexRoute)[0]);
 	    }, callback);
-	  } else if (route.childRoutes) {
-	    (function () {
-	      var pathless = route.childRoutes.filter(function (childRoute) {
+	  } else if (route.childRoutes || route.getChildRoutes) {
+	    var onChildRoutes = function onChildRoutes(error, childRoutes) {
+	      if (error) {
+	        callback(error);
+	        return;
+	      }
+	
+	      var pathless = childRoutes.filter(function (childRoute) {
 	        return !childRoute.path;
 	      });
 	
@@ -5905,7 +5920,12 @@
 	      }, function (err, routes) {
 	        callback(null, routes);
 	      });
-	    })();
+	    };
+	
+	    var result = getChildRoutes(route, location, paramNames, paramValues, onChildRoutes);
+	    if (result) {
+	      onChildRoutes.apply(undefined, result);
+	    }
 	  } else {
 	    callback();
 	  }
@@ -5959,7 +5979,7 @@
 	    // By assumption, pattern is non-empty here, which is the prerequisite for
 	    // actually terminating a match.
 	    if (remainingPathname === '') {
-	      var _ret2 = function () {
+	      var _ret = function () {
 	        var match = {
 	          routes: [route],
 	          params: createParams(paramNames, paramValues)
@@ -5990,7 +6010,7 @@
 	        };
 	      }();
 	
-	      if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+	      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 	    }
 	  }
 	
@@ -6568,7 +6588,7 @@
 	
 	    if (router) {
 	      // If user does not specify a `to` prop, return an empty anchor tag.
-	      if (to == null) {
+	      if (!to) {
 	        return _react2.default.createElement('a', props);
 	      }
 	
@@ -6685,6 +6705,10 @@
 	      var _this = this;
 	
 	      var router = this.props.router || this.context.router;
+	      if (!router) {
+	        return _react2.default.createElement(WrappedComponent, this.props);
+	      }
+	
 	      var params = router.params,
 	          location = router.location,
 	          routes = router.routes;
@@ -7350,6 +7374,92 @@
 	var strictUriEncode = __webpack_require__(66);
 	var objectAssign = __webpack_require__(6);
 	
+	function encoderForArrayFormat(opts) {
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, index) {
+					return value === null ? [
+						encode(key, opts),
+						'[',
+						index,
+						']'
+					].join('') : [
+						encode(key, opts),
+						'[',
+						encode(index, opts),
+						']=',
+						encode(value, opts)
+					].join('');
+				};
+	
+			case 'bracket':
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'[]=',
+						encode(value, opts)
+					].join('');
+				};
+	
+			default:
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'=',
+						encode(value, opts)
+					].join('');
+				};
+		}
+	}
+	
+	function parserForArrayFormat(opts) {
+		var result;
+	
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, accumulator) {
+					result = /\[(\d*)]$/.exec(key);
+	
+					key = key.replace(/\[\d*]$/, '');
+	
+					if (!result) {
+						accumulator[key] = value;
+						return;
+					}
+	
+					if (accumulator[key] === undefined) {
+						accumulator[key] = {};
+					}
+	
+					accumulator[key][result[1]] = value;
+				};
+	
+			case 'bracket':
+				return function (key, value, accumulator) {
+					result = /(\[])$/.exec(key);
+	
+					key = key.replace(/\[]$/, '');
+	
+					if (!result || accumulator[key] === undefined) {
+						accumulator[key] = value;
+						return;
+					}
+	
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+	
+			default:
+				return function (key, value, accumulator) {
+					if (accumulator[key] === undefined) {
+						accumulator[key] = value;
+						return;
+					}
+	
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+		}
+	}
+	
 	function encode(value, opts) {
 		if (opts.encode) {
 			return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
@@ -7358,11 +7468,29 @@
 		return value;
 	}
 	
+	function keysSorter(input) {
+		if (Array.isArray(input)) {
+			return input.sort();
+		} else if (typeof input === 'object') {
+			return keysSorter(Object.keys(input)).sort(function (a, b) {
+				return Number(a) - Number(b);
+			}).map(function (key) {
+				return input[key];
+			});
+		}
+	
+		return input;
+	}
+	
 	exports.extract = function (str) {
 		return str.split('?')[1] || '';
 	};
 	
-	exports.parse = function (str) {
+	exports.parse = function (str, opts) {
+		opts = objectAssign({arrayFormat: 'none'}, opts);
+	
+		var formatter = parserForArrayFormat(opts);
+	
 		// Create an object with no prototype
 		// https://github.com/sindresorhus/query-string/issues/47
 		var ret = Object.create(null);
@@ -7384,31 +7512,36 @@
 			var key = parts.shift();
 			var val = parts.length > 0 ? parts.join('=') : undefined;
 	
-			key = decodeURIComponent(key);
-	
 			// missing `=` should be `null`:
 			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
 			val = val === undefined ? null : decodeURIComponent(val);
 	
-			if (ret[key] === undefined) {
-				ret[key] = val;
-			} else if (Array.isArray(ret[key])) {
-				ret[key].push(val);
-			} else {
-				ret[key] = [ret[key], val];
-			}
+			formatter(decodeURIComponent(key), val, ret);
 		});
 	
-		return ret;
+		return Object.keys(ret).sort().reduce(function (result, key) {
+			var val = ret[key];
+			if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
+				// Sort object keys, not values
+				result[key] = keysSorter(val);
+			} else {
+				result[key] = val;
+			}
+	
+			return result;
+		}, Object.create(null));
 	};
 	
 	exports.stringify = function (obj, opts) {
 		var defaults = {
 			encode: true,
-			strict: true
+			strict: true,
+			arrayFormat: 'none'
 		};
 	
 		opts = objectAssign(defaults, opts);
+	
+		var formatter = encoderForArrayFormat(opts);
 	
 		return obj ? Object.keys(obj).sort().map(function (key) {
 			var val = obj[key];
@@ -7429,11 +7562,7 @@
 						return;
 					}
 	
-					if (val2 === null) {
-						result.push(encode(key, opts));
-					} else {
-						result.push(encode(key, opts) + '=' + encode(val2, opts));
-					}
+					result.push(formatter(key, val2, result.length));
 				});
 	
 				return result.join('&');
@@ -9188,6 +9317,13 @@
 	var internalInstanceKey = '__reactInternalInstance$' + Math.random().toString(36).slice(2);
 	
 	/**
+	 * Check if a given node should be cached.
+	 */
+	function shouldPrecacheNode(node, nodeID) {
+	  return node.nodeType === 1 && node.getAttribute(ATTR_NAME) === String(nodeID) || node.nodeType === 8 && node.nodeValue === ' react-text: ' + nodeID + ' ' || node.nodeType === 8 && node.nodeValue === ' react-empty: ' + nodeID + ' ';
+	}
+	
+	/**
 	 * Drill down (through composites and empty components) until we get a host or
 	 * host text component.
 	 *
@@ -9252,7 +9388,7 @@
 	    }
 	    // We assume the child nodes are in the same order as the child instances.
 	    for (; childNode !== null; childNode = childNode.nextSibling) {
-	      if (childNode.nodeType === 1 && childNode.getAttribute(ATTR_NAME) === String(childID) || childNode.nodeType === 8 && childNode.nodeValue === ' react-text: ' + childID + ' ' || childNode.nodeType === 8 && childNode.nodeValue === ' react-empty: ' + childID + ' ') {
+	      if (shouldPrecacheNode(childNode, childID)) {
 	        precacheNode(childInst, childNode);
 	        continue outer;
 	      }
@@ -11493,17 +11629,6 @@
 	  }
 	};
 	
-	var fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-	  var Klass = this;
-	  if (Klass.instancePool.length) {
-	    var instance = Klass.instancePool.pop();
-	    Klass.call(instance, a1, a2, a3, a4, a5);
-	    return instance;
-	  } else {
-	    return new Klass(a1, a2, a3, a4, a5);
-	  }
-	};
-	
 	var standardReleaser = function (instance) {
 	  var Klass = this;
 	  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Trying to release an instance into a pool of a different type.') : _prodInvariant('25') : void 0;
@@ -11543,8 +11668,7 @@
 	  oneArgumentPooler: oneArgumentPooler,
 	  twoArgumentPooler: twoArgumentPooler,
 	  threeArgumentPooler: threeArgumentPooler,
-	  fourArgumentPooler: fourArgumentPooler,
-	  fiveArgumentPooler: fiveArgumentPooler
+	  fourArgumentPooler: fourArgumentPooler
 	};
 	
 	module.exports = PooledClass;
@@ -16362,12 +16486,18 @@
 	    } else {
 	      var contentToUse = CONTENT_TYPES[typeof props.children] ? props.children : null;
 	      var childrenToUse = contentToUse != null ? null : props.children;
+	      // TODO: Validate that text is allowed as a child of this node
 	      if (contentToUse != null) {
-	        // TODO: Validate that text is allowed as a child of this node
-	        if (process.env.NODE_ENV !== 'production') {
-	          setAndValidateContentChildDev.call(this, contentToUse);
+	        // Avoid setting textContent when the text is empty. In IE11 setting
+	        // textContent on a text area will cause the placeholder to not
+	        // show within the textarea until it has been focused and blurred again.
+	        // https://github.com/facebook/react/issues/6731#issuecomment-254874553
+	        if (contentToUse !== '') {
+	          if (process.env.NODE_ENV !== 'production') {
+	            setAndValidateContentChildDev.call(this, contentToUse);
+	          }
+	          DOMLazyTree.queueText(lazyTree, contentToUse);
 	        }
-	        DOMLazyTree.queueText(lazyTree, contentToUse);
 	      } else if (childrenToUse != null) {
 	        var mountImages = this.mountChildren(childrenToUse, transaction, context);
 	        for (var i = 0; i < mountImages.length; i++) {
@@ -18287,7 +18417,17 @@
 	      }
 	    } else {
 	      if (props.value == null && props.defaultValue != null) {
-	        node.defaultValue = '' + props.defaultValue;
+	        // In Chrome, assigning defaultValue to certain input types triggers input validation.
+	        // For number inputs, the display value loses trailing decimal points. For email inputs,
+	        // Chrome raises "The specified value <x> is not a valid email address".
+	        //
+	        // Here we check to see if the defaultValue has actually changed, avoiding these problems
+	        // when the user is inputting text
+	        //
+	        // https://github.com/facebook/react/issues/7253
+	        if (node.defaultValue !== '' + props.defaultValue) {
+	          node.defaultValue = '' + props.defaultValue;
+	        }
 	      }
 	      if (props.checked == null && props.defaultChecked != null) {
 	        node.defaultChecked = !!props.defaultChecked;
@@ -19034,9 +19174,15 @@
 	    // This is in postMount because we need access to the DOM node, which is not
 	    // available until after the component has mounted.
 	    var node = ReactDOMComponentTree.getNodeFromInstance(inst);
+	    var textContent = node.textContent;
 	
-	    // Warning: node.value may be the empty string at this point (IE11) if placeholder is set.
-	    node.value = node.textContent; // Detach value from defaultValue
+	    // Only set node.value if textContent is equal to the expected
+	    // initial value. In IE10/IE11 there is a bug where the placeholder attribute
+	    // will populate textContent as well.
+	    // https://developer.microsoft.com/microsoft-edge/platform/issues/101525/
+	    if (textContent === inst._wrapperState.initialValue) {
+	      node.value = textContent;
+	    }
 	  }
 	};
 	
@@ -19838,7 +19984,17 @@
 	    instance = ReactEmptyComponent.create(instantiateReactComponent);
 	  } else if (typeof node === 'object') {
 	    var element = node;
-	    !(element && (typeof element.type === 'function' || typeof element.type === 'string')) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : _prodInvariant('130', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : void 0;
+	    var type = element.type;
+	    if (typeof type !== 'function' && typeof type !== 'string') {
+	      var info = '';
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+	          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+	        }
+	      }
+	      info += getDeclarationErrorAddendum(element._owner);
+	       true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', type == null ? type : typeof type, info) : _prodInvariant('130', type == null ? type : typeof type, info) : void 0;
+	    }
 	
 	    // Special case string values
 	    if (typeof element.type === 'string') {
@@ -20128,7 +20284,7 @@
 	      // Since plain JS classes are defined without any special initialization
 	      // logic, we can not catch common errors early. Therefore, we have to
 	      // catch them here, at initialization time, instead.
-	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
+	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved || inst.state, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.getDefaultProps || inst.getDefaultProps.isReactClassApproved, 'getDefaultProps was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Use a static property to define defaultProps instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.propTypes, 'propTypes was defined as an instance property on %s. Use a static ' + 'property to define propTypes instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.contextTypes, 'contextTypes was defined as an instance property on %s. Use a ' + 'static property to define contextTypes instead.', this.getName() || 'a component') : void 0;
@@ -21132,14 +21288,11 @@
 	
 	'use strict';
 	
-	var _prodInvariant = __webpack_require__(90),
-	    _assign = __webpack_require__(6);
+	var _prodInvariant = __webpack_require__(90);
 	
 	var invariant = __webpack_require__(10);
 	
 	var genericComponentClass = null;
-	// This registry keeps track of wrapper classes around host tags.
-	var tagToComponentClass = {};
 	var textComponentClass = null;
 	
 	var ReactHostComponentInjection = {
@@ -21152,11 +21305,6 @@
 	  // rendered as props.
 	  injectTextComponentClass: function (componentClass) {
 	    textComponentClass = componentClass;
-	  },
-	  // This accepts a keyed object with classes as values. Each key represents a
-	  // tag. That particular tag will use this class instead of the generic one.
-	  injectComponentClasses: function (componentClasses) {
-	    _assign(tagToComponentClass, componentClasses);
 	  }
 	};
 	
@@ -26011,7 +26159,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.4.1';
+	module.exports = '15.4.2';
 
 /***/ },
 /* 227 */
@@ -26401,88 +26549,133 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	var React = __webpack_require__(3);
 	var $ = __webpack_require__(234);
+	var NewRestaurantForm = __webpack_require__(235);
 	
-	var NewRestaurant = React.createClass({
-	  displayName: 'NewRestaurant',
+	
+	var Restaurants = React.createClass({
+	  displayName: 'Restaurants',
 	
 	  getInitialState: function getInitialState() {
 	    return {
+	      restaurants: null,
 	      name: "",
-	      neighborhood: "",
 	      address: "",
+	      cost: "1",
 	      cuisine: "",
-	      cost: 0
+	      neighborhood: ""
 	    };
 	  },
-	  updateName: function updateName(e) {
-	    this.setState({ name: e.currentTarget.value });
+	  componentDidMount: function componentDidMount() {
+	    this.getInfo();
 	  },
-	  updateNeighborhood: function updateNeighborhood(e) {
-	    this.setState({ neighborhood: e.currentTarget.value });
-	  },
-	  updateAddress: function updateAddress(e) {
-	    this.setState({ address: e.currentTarget.value });
-	  },
-	  updateCuisine: function updateCuisine(e) {
-	    this.setState({ cuisine: e.currentTarget.value });
-	  },
-	  updateCost: function updateCost(e) {
-	    this.setState({ cost: Number(e.currentTarget.value) });
-	  },
-	  handleSubmit: function handleSubmit(e) {
-	    var that = this;
+	  getInfo: function getInfo() {
+	    var _this = this;
+	
 	    $.ajax({
-	      url: "/api/restaurants/",
-	      type: "POST",
-	      data: this.state
-	    }).done(function () {
-	      that.props.fetch();
+	      url: '/api/restaurants',
+	      type: 'GET'
+	    }).done(function (restaurants) {
+	      _this.setState({
+	        restaurants: restaurants
+	      });
 	    });
 	  },
+	  handleform: function handleform(event) {
+	    this.setState(_defineProperty({}, event.target.name, event.target.value));
+	  },
+	  submitform: function submitform(event) {
+	    var _this2 = this;
+	
+	    event.preventDefault();
+	    var _state = this.state,
+	        name = _state.name,
+	        address = _state.address,
+	        cuisine = _state.cuisine,
+	        cost = _state.cost,
+	        neighborhood = _state.neighborhood;
+	
+	    $.ajax({
+	      url: '/api/restaurants',
+	      type: 'POST',
+	      data: {
+	        name: name,
+	        address: address,
+	        cuisine: cuisine,
+	        cost: cost,
+	        neighborhood: neighborhood
+	      }
+	    }).done(function (restaurants) {
+	      _this2.getInfo();
+	    });
+	  },
+	
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit },
-	        React.createElement('input', { type: 'text', onChange: this.updateName, value: this.state.name, placeholder: 'Name' }),
-	        React.createElement('input', { type: 'text', onChange: this.updateNeighborhood, placeholder: 'Neighborhood' }),
-	        React.createElement('input', { type: 'text', onChange: this.updateAddress, placeholder: 'Address' }),
-	        React.createElement('input', { type: 'text', onChange: this.updateCuisine, placeholder: 'Cuisine' }),
+	        'ol',
+	        null,
+	        this.state.restaurants && this.state.restaurants.map(function (restaurant, index) {
+	          return React.createElement(
+	            _reactRouter.Link,
+	            { key: index, to: "/restaurants/" + restaurant.id },
+	            React.createElement(
+	              'li',
+	              null,
+	              restaurant.name
+	            )
+	          );
+	        })
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
 	        React.createElement(
-	          'select',
-	          { onChange: this.updateCost },
+	          'form',
+	          { onSubmit: this.submitform },
+	          React.createElement('input', { onChange: this.handleform, type: 'text', name: 'name', value: this.state.name, placeholder: 'Name' }),
+	          React.createElement('input', { onChange: this.handleform, type: 'text', name: 'neighborhood', placeholder: 'Neighborhood' }),
+	          React.createElement('input', { onChange: this.handleform, type: 'text', name: 'address', placeholder: 'Address' }),
+	          React.createElement('input', { onChange: this.handleform, type: 'text', name: 'cuisine', placeholder: 'Cuisine' }),
 	          React.createElement(
-	            'option',
-	            { value: '1' },
-	            '$'
+	            'select',
+	            { onChange: this.handleform, name: 'cost' },
+	            React.createElement(
+	              'option',
+	              { value: '1' },
+	              '$'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: '2' },
+	              '$$'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: '3' },
+	              '$$$'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: '4' },
+	              '$$$$'
+	            )
 	          ),
-	          React.createElement(
-	            'option',
-	            { value: '2' },
-	            '$$'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '3' },
-	            '$$$'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '4' },
-	            '$$$$'
-	          )
-	        ),
-	        React.createElement('input', { type: 'submit', value: 'Add New Restaurant' })
+	          React.createElement('input', { type: 'submit', value: 'Add New Restaurant' })
+	        )
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = NewRestaurant;
+	module.exports = Restaurants;
 
 /***/ },
 /* 234 */
@@ -36719,37 +36912,310 @@
 	var React = __webpack_require__(3);
 	var $ = __webpack_require__(234);
 	
+	var NewRestaurant = React.createClass({
+	  displayName: 'NewRestaurant',
+	
+	  getInitialState: function getInitialState() {},
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'form',
+	        null,
+	        React.createElement('input', { type: 'text', value: this.state.name, placeholder: 'Name' }),
+	        React.createElement('input', { type: 'text', placeholder: 'Neighborhood' }),
+	        React.createElement('input', { type: 'text', placeholder: 'Address' }),
+	        React.createElement('input', { type: 'text', placeholder: 'Cuisine' }),
+	        React.createElement(
+	          'select',
+	          null,
+	          React.createElement(
+	            'option',
+	            { value: '1' },
+	            '$'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '2' },
+	            '$$'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '3' },
+	            '$$$'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '4' },
+	            '$$$$'
+	          )
+	        ),
+	        React.createElement('input', { type: 'submit', value: 'Add New Restaurant' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = NewRestaurant;
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(3);
+	var $ = __webpack_require__(234);
+	var Review = __webpack_require__(237);
+	
+	var Restaurant = React.createClass({
+	  displayName: 'Restaurant',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      restaurant: null,
+	      date: "",
+	      description: "",
+	      rating: ""
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.getResInfo();
+	  },
+	  handleSubmit: function handleSubmit(event) {
+	    var _this = this;
+	
+	    event.preventDefault();
+	    var _state = this.state,
+	        date = _state.date,
+	        description = _state.description,
+	        rating = _state.rating;
+	
+	    $.ajax({
+	      url: '/api/review',
+	      type: 'POST',
+	      data: {
+	        date: date,
+	        description: description,
+	        rating: rating,
+	        RestaurantId: this.props.params.id
+	      }
+	    }).done(function (review) {
+	      console.log("reviee", review);
+	      _this.getResInfo();
+	    });
+	  },
+	  getResInfo: function getResInfo() {
+	    var _this2 = this;
+	
+	    $.ajax({
+	      url: '/api/restaurants/' + this.props.params.id,
+	      type: 'GET'
+	    }).done(function (restaurant) {
+	      _this2.setState({
+	        restaurant: restaurant
+	      });
+	    });
+	  },
+	  handledate: function handledate(event) {
+	    this.setState({ date: event.target.value });
+	  },
+	  handledes: function handledes(event) {
+	    this.setState({ description: event.target.value });
+	  },
+	  handlerate: function handlerate(event) {
+	    this.setState({ rating: event.target.value });
+	  },
+	
+	  render: function render() {
+	    console.log(this.state.restaurant);
+	    var stars = "";
+	    var reviews = [];
+	    var restaurant = this.state.restaurant;
+	    return React.createElement(
+	      'div',
+	      null,
+	      restaurant && React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h1',
+	          null,
+	          restaurant.name
+	        ),
+	        React.createElement(
+	          'strong',
+	          null,
+	          'Neighborhood:'
+	        ),
+	        ' ',
+	        restaurant.neighborhood,
+	        React.createElement('br', null),
+	        React.createElement(
+	          'strong',
+	          null,
+	          'Address:'
+	        ),
+	        ' ',
+	        restaurant.address,
+	        React.createElement('br', null),
+	        React.createElement(
+	          'strong',
+	          null,
+	          'Cuisine:'
+	        ),
+	        ' ',
+	        restaurant.cuisine,
+	        React.createElement('br', null),
+	        React.createElement(
+	          'strong',
+	          null,
+	          'Cost:'
+	        ),
+	        ' ',
+	        restaurant.cost,
+	        React.createElement('br', null)
+	      ),
+	      React.createElement(
+	        'ol',
+	        null,
+	        restaurant && restaurant.Reviews.map(function (review, index) {
+	          return React.createElement(
+	            'li',
+	            { key: index },
+	            React.createElement(
+	              'strong',
+	              null,
+	              'Date: '
+	            ),
+	            ' ',
+	            review.date,
+	            React.createElement('br', null),
+	            React.createElement(
+	              'strong',
+	              null,
+	              'Rating: '
+	            ),
+	            ' ',
+	            review.rating,
+	            React.createElement('br', null),
+	            React.createElement(
+	              'strong',
+	              null,
+	              'Description: '
+	            ),
+	            ' ',
+	            review.description,
+	            React.createElement('br', null)
+	          );
+	        })
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit },
+	          React.createElement(
+	            'h1',
+	            null,
+	            'Write A Review'
+	          ),
+	          React.createElement('input', { type: 'date', onChange: this.handledate }),
+	          ' ',
+	          React.createElement('br', null),
+	          React.createElement('textarea', { onChange: this.handledes, type: 'text', placeholder: 'Describe your experience' }),
+	          ' ',
+	          React.createElement('br', null),
+	          React.createElement(
+	            'select',
+	            { onChange: this.handlerate },
+	            React.createElement(
+	              'option',
+	              { value: '1' },
+	              '*'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: '2' },
+	              '**'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: '3' },
+	              '***'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: '4' },
+	              '****'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: '5' },
+	              '*****'
+	            )
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'submit', value: 'Submit Review' })
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Restaurant;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(3);
+	var $ = __webpack_require__(234);
+	
 	var Review = React.createClass({
 	  displayName: 'Review',
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      rating: "",
-	      description: "",
 	      date: "",
-	      RestaurantId: this.props.id
+	      description: "",
+	      rating: ""
 	    };
 	  },
-	  updateRating: function updateRating(e) {
-	    this.setState({ rating: parseInt(e.currentTarget.value) });
-	  },
-	  updateDescription: function updateDescription(e) {
-	    this.setState({ description: e.currentTarget.value });
-	  },
-	  updateDate: function updateDate(e) {
-	    this.setState({ date: e.currentTarget.value });
-	  },
-	  handleSubmit: function handleSubmit(e) {
-	    e.preventDefault();
-	    var that = this;
+	  handleSubmit: function handleSubmit(event) {
+	    event.preventDefault();
+	    var _state = this.state,
+	        date = _state.date,
+	        description = _state.description,
+	        rating = _state.rating;
+	
 	    $.ajax({
-	      url: "/api/review/",
-	      type: "POST",
-	      data: this.state
-	    }).done(function () {
-	      that.props.fetch();
+	      url: '/api/review',
+	      type: 'POST',
+	      data: {
+	        date: date,
+	        description: description,
+	        rating: rating,
+	        RestaurantId: this.props.restaurantId
+	      }
+	    }).done(function (review) {
+	      console.log("reviee", review);
 	    });
 	  },
+	  handledate: function handledate(event) {
+	    this.setState({ date: event.target.value });
+	  },
+	  handledes: function handledes(event) {
+	    this.setState({ description: event.target.value });
+	  },
+	  handlerate: function handlerate(event) {
+	    this.setState({ rating: event.target.value });
+	  },
+	
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -36757,15 +37223,20 @@
 	      React.createElement(
 	        'form',
 	        { onSubmit: this.handleSubmit },
-	        React.createElement('input', { type: 'date', onChange: this.updateDate }),
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Write A Review'
+	        ),
+	        React.createElement('input', { type: 'date', onChange: this.handledate }),
 	        ' ',
 	        React.createElement('br', null),
-	        React.createElement('textarea', { type: 'text', onChange: this.updateDescription, placeholder: 'Describe your experience' }),
+	        React.createElement('textarea', { onChange: this.handledes, type: 'text', placeholder: 'Describe your experience' }),
 	        ' ',
 	        React.createElement('br', null),
 	        React.createElement(
 	          'select',
-	          { onChange: this.updateRating },
+	          { onChange: this.handlerate },
 	          React.createElement(
 	            'option',
 	            { value: '1' },
@@ -36800,215 +37271,6 @@
 	});
 	
 	module.exports = Review;
-
-/***/ },
-/* 236 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(3);
-	var $ = __webpack_require__(234);
-	var Review = __webpack_require__(235);
-	
-	var Restaurant = React.createClass({
-	  displayName: 'Restaurant',
-	
-	  getInitialState: function getInitialState() {
-	    return { restaurant: null };
-	  },
-	  fetchRestaurant: function fetchRestaurant() {
-	    var restaurantId = this.props.params.id;
-	    var that = this;
-	    $.ajax({
-	      url: "/api/restaurants/" + restaurantId,
-	      success: function success(data) {
-	        that.setState({ restaurant: data });
-	      }
-	    });
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.fetchRestaurant();
-	  },
-	  render: function render() {
-	    var stars = "";
-	    var reviews = [];
-	    if (this.state.restaurant) {
-	      for (var i = 0; i < this.state.restaurant.cost; i++) {
-	        stars += "$";
-	      }
-	      for (var _i = 0; _i < this.state.restaurant.Reviews.length; _i++) {
-	        var review = this.state.restaurant.Reviews[_i];
-	        reviews.push(React.createElement(
-	          'div',
-	          { key: _i },
-	          React.createElement(
-	            'strong',
-	            null,
-	            _i + 1,
-	            '. Date: '
-	          ),
-	          ' ',
-	          review.date,
-	          ' ',
-	          React.createElement('br', null),
-	          React.createElement(
-	            'strong',
-	            null,
-	            'Rating: '
-	          ),
-	          ' ',
-	          review.rating,
-	          ' ',
-	          React.createElement('br', null),
-	          React.createElement(
-	            'strong',
-	            null,
-	            'Description: '
-	          ),
-	          ' ',
-	          review.description,
-	          ' ',
-	          React.createElement('br', null)
-	        ));
-	      }
-	
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'h2',
-	          null,
-	          this.state.restaurant.name
-	        ),
-	        ' ',
-	        React.createElement('br', null),
-	        React.createElement(
-	          'strong',
-	          null,
-	          'Neighborhood: '
-	        ),
-	        this.state.restaurant.neighborhood,
-	        ' ',
-	        React.createElement('br', null),
-	        React.createElement(
-	          'strong',
-	          null,
-	          'Address: '
-	        ),
-	        this.state.restaurant.address,
-	        ' ',
-	        React.createElement('br', null),
-	        React.createElement(
-	          'strong',
-	          null,
-	          'Cuisine: '
-	        ),
-	        this.state.restaurant.cuisine,
-	        ' ',
-	        React.createElement('br', null),
-	        React.createElement(
-	          'strong',
-	          null,
-	          'Cost: '
-	        ),
-	        stars,
-	        React.createElement('br', null),
-	        React.createElement(
-	          'h3',
-	          null,
-	          'Reviews'
-	        ),
-	        reviews,
-	        React.createElement(
-	          'h3',
-	          null,
-	          'Write a New Review'
-	        ),
-	        React.createElement(Review, { id: this.state.restaurant.id, fetch: this.fetchRestaurant })
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        null,
-	        'Loading...'
-	      );
-	    }
-	  }
-	});
-	
-	module.exports = Restaurant;
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _reactRouter = __webpack_require__(1);
-	
-	var React = __webpack_require__(3);
-	var $ = __webpack_require__(234);
-	var NewRestaurantForm = __webpack_require__(233);
-	
-	
-	var Restaurants = React.createClass({
-	  displayName: 'Restaurants',
-	
-	  getInitialState: function getInitialState() {
-	    return { restaurants: null };
-	  },
-	  fetchRestaurants: function fetchRestaurants() {
-	    var that = this;
-	    $.ajax({
-	      url: "api/restaurants",
-	      success: function success(data) {
-	        that.setState({ restaurants: data });
-	      }
-	    });
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.fetchRestaurants();
-	  },
-	  render: function render() {
-	    var restaurants = [];
-	    if (this.state.restaurants) {
-	      for (var i = 0; i < this.state.restaurants.length; i++) {
-	        var restaurant = this.state.restaurants[i];
-	        restaurants.push(React.createElement(
-	          'div',
-	          { key: i },
-	          i + 1,
-	          '. ',
-	          React.createElement(
-	            _reactRouter.Link,
-	            { to: "restaurants/" + restaurant.id },
-	            restaurant.name
-	          )
-	        ));
-	      }
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'h1',
-	          null,
-	          'YALP'
-	        ),
-	        restaurants,
-	        React.createElement(NewRestaurantForm, { fetch: this.fetchRestaurants })
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        null,
-	        'Loading...'
-	      );
-	    }
-	  }
-	});
-	
-	module.exports = Restaurants;
 
 /***/ }
 /******/ ]);

@@ -4,16 +4,45 @@ var $ = require('jquery')
 var Review = React.createClass({
   getInitialState: function (){
     return {
-
+      date: "",
+      description: "",
+      rating: ""
     }
+  },
+  handleSubmit(event){
+    event.preventDefault()
+    const {date, description, rating} = this.state
+    $.ajax({
+      url: '/api/review',
+      type: 'POST',
+      data: {
+        date,
+        description,
+        rating,
+        RestaurantId: this.props.restaurantId
+      }
+    })
+    .done(review => {
+      console.log("reviee", review)
+    })
+  },
+  handledate(event){
+    this.setState({date: event.target.value})
+  },
+  handledes(event){
+    this.setState({description: event.target.value})
+  },
+  handlerate(event){
+    this.setState({rating: event.target.value})
   },
   render: function() {
     return (
       <div>
-        <form>
-          <input type="date"/> <br/>
-          <textarea type="text" placeholder="Describe your experience"/> <br/>
-          <select>
+        <form onSubmit={this.handleSubmit}>
+          <h1>Write A Review</h1>
+          <input type="date" onChange={this.handledate}/> <br/>
+          <textarea onChange={this.handledes} type="text" placeholder="Describe your experience"/> <br/>
+          <select onChange={this.handlerate}>
             <option value="1">*</option>
             <option value="2">**</option>
             <option value="3">***</option>
