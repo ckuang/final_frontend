@@ -12,7 +12,7 @@ let Restaurant = React.createClass({
     // if (this.state.restaurant) {
       return (
         <div>
-        <Review />
+        <Review restaurantId = {this.state.restaurant} />
           <button> rest</button>
         </div>
       )

@@ -33,13 +33,13 @@ let Restaurants = React.createClass({
     if (this.state.restaurants) {
       return(
         <div>
+          <NewRestaurantForm />
           <ul>
             {this.state.restaurants.map(function(a,b){
-              <li> {a} </li>
+              return <li key ={b}> {a} </li>
             })}
 
           </ul>
-          <NewRestaurantForm />
         </div>
       )
     } else {
