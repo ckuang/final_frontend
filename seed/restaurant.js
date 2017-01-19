@@ -1,3 +1,5 @@
+'use strict';
+
 let hasaki = {
   name: "Hasaki",
   neighborhood: "East Village",

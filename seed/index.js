@@ -1,3 +1,5 @@
+'use strict';
+
 let restaurants = require('./restaurant.js')
 let reviews = require('./review.js')
 let Restaurant = require('../models').Restaurant
