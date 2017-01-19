@@ -1,22 +1,22 @@
-{
+ {
   "development": {
-    "username": "Kuang",
+    "username": "Vanessa",
     "password": null,
     "database": "yalp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "Kuang",
+    "username": "Vanessa",
     "password": null,
     "database": "yalp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "username": "Kuang",
+    "username": "Vanessa",
     "password": null,
-    "database": "database_production",
+    "database": "yalp",
     "host": "127.0.0.1",
     "dialect": "postgres"
   }

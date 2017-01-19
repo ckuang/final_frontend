@@ -26,12 +26,22 @@ describe('Yalp', () => {
 /*
   * Test the /GET route
   */
-  describe('/GET restaurants', () => {
-      it('it should GET all the restaurants', (done) => {
+  describe('/GET restaurants route', () => {
+      it('server should have a /api/restaurants GET route', (done) => {
         chai.request(server)
             .get('/api/restaurants')
             .end((err, res) => {
                 res.should.have.status(200);
+              done();
+            });
+      });
+  });
+
+  describe('/GET restaurants functionality', () => {
+      it('route should GET all the restaurants', (done) => {
+        chai.request(server)
+            .get('/api/restaurants')
+            .end((err, res) => {
                 res.body.should.be.a('array');
                 res.body.length.should.be.eql(4);
               done();
@@ -39,50 +49,83 @@ describe('Yalp', () => {
       });
   });
 
-  describe('/POST restaurant', () => {
-      it('it should POST a restaurant ', (done) => {
+  describe('/POST restaurant route', () => {
+      it('server should have a /api/restaurants POST route', (done) => {
         let restaurant = restaurants[1]
         chai.request(server)
             .post('/api/restaurants')
             .send(restaurant)
             .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('message').eql('Restaurant successfully added!');
-                res.body.restaurant.should.have.property('name');
-                res.body.restaurant.should.have.property('neighborhood');
-                res.body.restaurant.should.have.property('cuisine');
-                res.body.restaurant.should.have.property('address');
-                res.body.restaurant.should.have.property('cost');
               done();
             });
       });
   });
 
-  describe('/POST review', () => {
-      it('it should POST a review ', (done) => {
+  describe('/POST restaurant functionality', () => {
+      it('route should POST a restaurant', (done) => {
+        let restaurant = restaurants[1]
+        chai.request(server)
+            .post('/api/restaurants')
+            .send(restaurant)
+            .end((err, res) => {
+                res.body.should.be.a('object');
+                res.body.should.have.property('name');
+                res.body.should.have.property('neighborhood');
+                res.body.should.have.property('cuisine');
+                res.body.should.have.property('address');
+                res.body.should.have.property('cost');
+              done();
+            });
+      });
+  });
+
+  describe('/POST review route', () => {
+      it('server should have a /api/restaurant/:id route', (done) => {
         let review = reviews[0]
         chai.request(server)
             .post('/api/review')
             .send(review)
             .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('message').eql('Review successfully added!');
-                res.body.review.should.have.property('rating');
-                res.body.review.should.have.property('description');
-                res.body.review.should.have.property('date');
               done();
             });
       });
   });
 
-  describe('/GET restaurant', () => {
-      it('it should GET a single restaurant along with all its reviews', (done) => {
+  describe('/POST review functionality', () => {
+      it('route should POST a review ', (done) => {
+        let review = reviews[0]
+        chai.request(server)
+            .post('/api/review')
+            .send(review)
+            .end((err, res) => {
+                res.body.should.be.a('object');
+                res.body.should.have.property('rating');
+                res.body.should.have.property('description');
+                res.body.should.have.property('date');
+              done();
+            });
+      });
+  });
+
+
+  describe('/GET restaurant route', () => {
+      it('server should have a /api/restaurant/:id GET route', (done) => {
         chai.request(server)
             .get('/api/restaurants/1')
             .end((err, res) => {
                 res.should.have.status(200);
+              done();
+            });
+      });
+  });
+
+  describe('/GET restaurant functionality', () => {
+      it('route should GET a single restaurant along with all its reviews', (done) => {
+        chai.request(server)
+            .get('/api/restaurants/1')
+            .end((err, res) => {
                 res.body.should.be.a('object');
                 res.body.should.have.property('name');
                 res.body.should.have.property('neighborhood');
