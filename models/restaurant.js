@@ -1,7 +1,6 @@
-"use strict";
-
+'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Restaurant = sequelize.define("Restaurant", {
+  var Restaurant = sequelize.define('Restaurant', {
     name: DataTypes.STRING,
     neighborhood: DataTypes.STRING,
     address: DataTypes.STRING,
@@ -14,6 +13,5 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
-
   return Restaurant;
 };
