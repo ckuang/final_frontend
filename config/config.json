@@ -1,23 +1,14 @@
 {
   "development": {
-    "username": "Kuang",
-    "password": null,
-    "database": "yalp",
-    "host": "127.0.0.1",
+    "url": "postgres://postgres:walruspass@localhost:5432/yalp",
     "dialect": "postgres"
   },
   "test": {
-    "username": "Kuang",
-    "password": null,
-    "database": "yalp",
-    "host": "127.0.0.1",
+    "url": "postgres://postgres:walruspass@localhost:5432/yalp",
     "dialect": "postgres"
   },
   "production": {
-    "username": "Kuang",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "url": "postgres://postgres:walruspass@localhost:5432/yalp",
     "dialect": "postgres"
   }
 }

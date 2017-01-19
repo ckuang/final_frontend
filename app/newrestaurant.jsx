@@ -3,7 +3,9 @@ var $ = require('jquery')
 
 var NewRestaurant = React.createClass({
   getInitialState: function (){
-
+    return ({
+      
+    })
   },
   render: function() {
     return (
