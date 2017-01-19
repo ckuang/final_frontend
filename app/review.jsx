@@ -7,6 +7,9 @@ var Review = React.createClass({
 
     }
   },
+  componentDidMount: function() {
+    $
+  },
   render: function() {
     return (
       <div>

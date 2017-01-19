@@ -7,12 +7,26 @@ let Restaurants = React.createClass({
   getInitialState: function() {
     return({restaurants: null})
   },
+  componentDidMount: function() {
+    $.ajax({
+      url: "/api/restaurants",
+      type: "GET",
+      success: (data) => {
+        this.setState({restaurants: data})
+        console.log(data)
+      }
+    })
+  },
   render: function() {
-    let restaurants = []
     if (this.state.restaurants) {
+      var restaurants = this.state.restaurants
       return(
         <div>
-          <h1>YALP</h1>
+          {
+            restaurants.map((ele, ind) => {
+              <Link to= key={ind}></Link>
+            })
+          }
         </div>
       )
     } else {
