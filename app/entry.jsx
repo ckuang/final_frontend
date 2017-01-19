@@ -9,6 +9,7 @@ let App = React.createClass({
   render: function() {
     return(
       <div>
+        <button> working</button>
         {this.props.children}
       </div>
     )
@@ -16,5 +17,12 @@ let App = React.createClass({
 })
 
 ReactDOM.render(
+  <Router history = {browserHistory}>
+    <Route path = '/reviews' component = {Restaurant}/>
+    <Route path = '/newrestaurants' component = {Restaurants}/>
+
+      
+  </Router>,
+  document.getElementById("root")
 
 )

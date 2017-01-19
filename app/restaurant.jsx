@@ -9,17 +9,18 @@ let Restaurant = React.createClass({
   render: function() {
     let stars = ""
     let reviews = []
-    if (this.state.restaurant) {
+    // if (this.state.restaurant) {
       return (
         <div>
-
+        <Review />
+          <button> rest</button>
         </div>
       )
-    } else {
-      return (
-        <div>Loading...</div>
-      )
-    }
+    // } else {
+    //   return (
+    //     <div>Loading...</div>
+    //   )
+    // }
   }
 })
 
