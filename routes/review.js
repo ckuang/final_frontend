@@ -8,4 +8,10 @@ router.post('/', function(req, res) {
   });
 });
 
+router.get('/', function(req, res) {
+  models.Review.findAll().then(function(review) {
+        res.send({message: 'Review successfully added!', review})
+  });
+});
+
 module.exports = router;
