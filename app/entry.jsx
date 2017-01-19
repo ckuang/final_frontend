@@ -1,11 +1,13 @@
+
 var ReactDOM = require("react-dom")
 var React = require('react')
 import {browserHistory, IndexRoute, Router, Route} from 'react-router'
 var Restaurants = require("./restaurants.jsx")
-var Restaurant = require('./restaurant.jsx')
+var NewRestaurant = require('./newrestaurant.jsx')
 
 
-let App = React.createClass({
+
+var App = React.createClass({
   render: function() {
     return(
       <div>
@@ -16,5 +18,12 @@ let App = React.createClass({
 })
 
 ReactDOM.render(
+    <Router history={browserHistory}>
+			<Route path='/' component={Restaurants}>
+				<IndexRoute component={NewRestaurant}/>
+
+			</Route>
+		</Router>,
+  document.getElementById('root')
 
 )

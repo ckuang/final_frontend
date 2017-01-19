@@ -1,3 +1,5 @@
+'use strict';
+
 let review1 = {
     rating: 5,
     description: "The lunch special is amazing! V authentic.",
