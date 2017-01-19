@@ -1,26 +1,50 @@
-var models  = require('../models');
-var express = require('express');
-var router  = express.Router();
+const router = require('express').Router();
 
-router.get('/', function(req, res) {
-  models.Restaurant.findAll().then(function(restaurants) {
-    res.send(restaurants)
-  });
-});
+//REQUIRE MODELS
+const Restaurant = require('../models').Restaurant;
+const Review = require('../models').Review;
 
-router.post('/', function(req, res) {
-  models.Restaurant.create(req.body).then(function(restaurant){
-    res.send({message: 'Restaurant successfully added!', restaurant})
+//FUNCTIONS
+const getAllRestaurants = (req,res)=>(
+  Restaurant.findAll()
+  .then(RestaurantsInfo=>res.send(RestaurantsInfo))
+)
+
+const createRestaurant = (req,res)=>(
+  Restaurant.create({
+    name: req.body.name,
+    cost: req.body.cost,
+    neighborhood: req.body.neighborhood,
+    address: req.body.address,
+    cuisine: req.body.cuisine
   })
-});
+  .then(RestaurantInfo=>{
+    RestaurantInfo.dataValues.message = 'Restaurant successfully added!';
+    RestaurantInfo.dataValues.restaurant = {
+      name: RestaurantInfo.name,
+      neighborhood: RestaurantInfo.neighborhood,
+      cuisine: RestaurantInfo.cuisine,
+      address: RestaurantInfo.address,
+      cost: RestaurantInfo.cost
+    };
+    res.send(RestaurantInfo)
+  })
+)
 
-router.get('/:id', function(req, res) {
-  models.Restaurant.findOne({
+const getOneRestaurant = (req,res)=>(
+  Restaurant.findOne({
     where: {id: req.params.id},
-    include: [models.Review]
-  }).then(function(restaurant) {
-    res.send(restaurant)
-  });
-});
+    include: {model: Review}
+  })
+  .then(RestaurantInfo=>res.send(RestaurantInfo))
+)
 
-module.exports = router;
+//ROUTES
+router.route('/')
+  .get(getAllRestaurants)
+  .post(createRestaurant)
+
+router.route('/:id')
+  .get(getOneRestaurant)
+
+module.exports = router

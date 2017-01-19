@@ -1,11 +1,35 @@
-var models  = require('../models');
-var express = require('express');
-var router  = express.Router();
+const router = require('express').Router();
 
-router.post('/', function(req, res) {
-  models.Review.create(req.body).then(function(review) {
-        res.send({message: 'Review successfully added!', review})
-  });
-});
+//REQUIRE MODELS
+const Review = require('../models').Review;
 
-module.exports = router;
+//FUNCTIONS
+const getAllReviews = (req,res)=>(
+	Review.findAll()
+	.then(ReviewsInfo=>res.send(ReviewsInfo))
+)
+
+const createReview = (req,res)=>(
+	Review.create({
+		rating: req.body.rating,
+		description: req.body.description,
+		date: req.body.date,
+		RestaurantId: req.body.id
+	})
+	.then(ReviewInfo=>{
+		ReviewInfo.dataValues.message = 'Review successfully added!';
+    ReviewInfo.dataValues.review = {
+      rating: ReviewInfo.rating,
+      description: ReviewInfo.description,
+      date: ReviewInfo.date
+    };
+		res.send(ReviewInfo)
+	})
+
+)
+
+//ROUTES
+router.route('/')
+	.post(createReview)
+
+module.exports = router
