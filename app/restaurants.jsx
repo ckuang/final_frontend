@@ -12,7 +12,9 @@ let Restaurants = React.createClass({
     if (this.state.restaurants) {
       return(
         <div>
-          <h1>YALP</h1>
+          <h1><Link to='entry'>YALP</Link></h1>
+
+        
         </div>
       )
     } else {
