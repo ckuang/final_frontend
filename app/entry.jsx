@@ -15,6 +15,15 @@ let App = React.createClass({
   }
 })
 
-ReactDOM.render(
+ReactDOM.render((
+  <Router history={hashHistory}>
+     <Route path='/' component={entry}>
+       <IndexRoute component={Newrestaraunt} />
+        <Route path="restaurant" component={Restaurant} />
+        <Route path="restaraunts" component={Restaurants} />
+        <Route path="review" componet={Review} />
+     </Route>
+  </Router>
+)
 
 )
