@@ -10,20 +10,22 @@ let Restaurants = React.createClass({
     }
   },
 
-  componentDidMount(){
+  componentDidMount: function(){
     $.ajax({
       type: 'GET',
       url: '/api/restaurants',
-      success: (arrayofRestaurantObjs) => {
-        console.log("THE DATA WE ARE GETTING BACK FROM RESTAURANTS API ====>", arrayofRestaurantObjs)
+      success: (arrayofRestaurantsObjs) => {
+        console.log("THE DATA WE ARE GETTING BACK FROM RESTAURANTS API ====>", arrayofRestaurantsObjs)
         this.setState({
-          restaurants: arrayofRestaurantObjs
+          restaurants: arrayofRestaurantsObjs
         });
       }
     })
   },
 
+
   render: function() {
+    console.log(this.props)
     let restaurants = [];
     console.log("THIS IS THE STATE ====>", this.state)
     if (this.state.restaurants) {
@@ -32,22 +34,12 @@ let Restaurants = React.createClass({
           <h1>YALP</h1>
           <div>
           <ul>
-            {this.state.restaurants.map(function(restaurant, idx){
+            {this.state.restaurants.map(function(restaurant){
                 console.log("THESE ARE THE RESTAURANTS ===>", restaurant)
-                console.log("THIS IS THE ID===>",restaurant.id);
-
-              return <li key={restaurant.id}><Link to={`/restaurant/${restaurant.id}`}><h1>{restaurant.name}</h1></Link>
-              <h4>{restaurant.cuisine}</h4>
-                <h3>{restaurant.address}</h3>
-                <h3>{restaurant.neighborhood}</h3>
-                <h4>{restaurant.cost}</h4>
-                <h6>_________________________________________</h6>
+              return <li key={restaurant.id}><Link to={'/restaurant/' + restaurant.id}><h1>{restaurant.name}</h1></Link>
                 </li>
             })}
           </ul>
-        </div>
-        <div>
-          {this.props.children}
         </div>
       </div>
       )

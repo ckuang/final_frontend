@@ -1,19 +1,24 @@
 var React = require('react')
 var $ = require('jquery')
 
-var Review = React.createClass({
+var NewReview = React.createClass({
   getInitialState: function (){
     return {
 
     }
   },
   render: function() {
+
+    //when using select tags, they need to be associted with the form in order for it to submit.
+    //need handleDate function
+    //ned handleChange
+    //handleSubmit == onSubmit
     return (
       <div>
-        <form>
+        <form id="review">
           <input type="date"/> <br/>
           <textarea type="text" placeholder="Describe your experience"/> <br/>
-          <select>
+          <select form="review">
             <option value="1">*</option>
             <option value="2">**</option>
             <option value="3">***</option>
@@ -27,4 +32,4 @@ var Review = React.createClass({
   }
 });
 
-module.exports = Review
+module.exports = NewReview
