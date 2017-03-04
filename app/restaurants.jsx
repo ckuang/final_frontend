@@ -6,7 +6,7 @@ import {Link} from 'react-router'
 let Restaurants = React.createClass({
   getInitialState: function() {
     return {
-      restaurants: null,
+      restaurants: null
     }
   },
 

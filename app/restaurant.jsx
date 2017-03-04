@@ -5,7 +5,9 @@ var NewReview = require('./review.jsx')
 
 let Restaurant = React.createClass({
   getInitialState: function() {
-    return ({restaurant: null})
+    return {
+      restaurant: null,
+    }
   },
 
 //this.props.params correlates with the "Route path" in the React Router
@@ -25,11 +27,11 @@ let Restaurant = React.createClass({
   },
 
   render: function() {
-    console.log("THIS IS WHAT THIS.PROPS IS ===>", this.props)
+    // console.log("THIS IS WHAT THIS.PROPS IS ===>", this.props)
     console.log("THIS IS WHAT THIS.PROPS.PARAMS IS ===>", this.props.params)
     console.log("THIS IS THE CURRENT STATE ==>", this.state.restaurant)
-    let stars = ""
-    let reviews = []
+    // let stars = ""
+    // let reviews = []
     if (this.state.restaurant) {
       return (
         <div>
@@ -40,13 +42,13 @@ let Restaurant = React.createClass({
           <h3>Cost: ${this.state.restaurant.cost} <br /></h3><br />
         <div>
           <h2>Reviews<br /></h2>
-          {this.state.restaurant.Reviews.map(function(review, idx){
+          {this.state.reviews.map(function(review, idx){
             return (
               <h4 key={idx}>{idx + 1}) {review.date}<br />{review.description}<br />{review.rating}</h4>
             )
           })}
           <h1>Write A New Review</h1>
-          <NewReview />
+          <NewReview id={this.props.params.id} />
         </div>
         </div>
       )
