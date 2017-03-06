@@ -9,7 +9,14 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  models.Restaurant.create(req.body).then(function(restaurant){
+  models.Restaurant.create({
+    name: req.body.name,
+    neighborhood: req.body.neighborhood,
+    address: req.body.address,
+    cuisine: req.body.cuisine,
+    cost: req.body.cost
+  })
+  .then(function(restaurant){
     res.send({message: 'Restaurant successfully added!', restaurant})
   })
 });

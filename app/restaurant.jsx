@@ -7,6 +7,7 @@ let Restaurant = React.createClass({
   getInitialState: function() {
     return {
       restaurant: null,
+      reviews: []
     }
   },
 
@@ -42,7 +43,7 @@ let Restaurant = React.createClass({
           <h3>Cost: ${this.state.restaurant.cost} <br /></h3><br />
         <div>
           <h2>Reviews<br /></h2>
-          {this.state.reviews.map(function(review, idx){
+          {this.state.restaurant.Reviews.map(function(review, idx){
             return (
               <h4 key={idx}>{idx + 1}) {review.date}<br />{review.description}<br />{review.rating}</h4>
             )

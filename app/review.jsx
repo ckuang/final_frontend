@@ -33,7 +33,7 @@ var NewReview = React.createClass({
     // console.log("This is changing");
   },
 
-//it hold data and prevent it from disappearing
+//this holds data and prevents it from disappearing
   handleSubmit:function(e){
     e.preventDefault();
 
@@ -60,6 +60,7 @@ var NewReview = React.createClass({
           <input type="date" onChange={this.handleDate}/> <br/>
           <textarea type="text" placeholder="Describe your experience" onChange={this.handleDescription} /> <br/>
           <select form="review" onChange={this.handleRating}>
+            <option value="0"></option>
             <option value="1">*</option>
             <option value="2">**</option>
             <option value="3">***</option>

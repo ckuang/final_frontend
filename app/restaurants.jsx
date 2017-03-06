@@ -1,6 +1,6 @@
 var React = require('react')
 var $ = require('jquery')
-var NewRestaurantForm = require('./newrestaurant.jsx')
+var NewRestaurant= require('./newrestaurant.jsx')
 import {Link} from 'react-router'
 
 let Restaurants = React.createClass({
@@ -41,7 +41,12 @@ let Restaurants = React.createClass({
             })}
           </ul>
         </div>
+        <div>
+          <NewRestaurant />
+        </div>
+
       </div>
+
       )
     } else {
       return(
