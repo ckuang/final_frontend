@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 10000"
+    "test": "mocha --timeout 10000",
+    "start": "webpack --watch & node server.js"
   },
   "keywords": [],
   "author": "",
